@@ -1,9 +1,9 @@
 use axum::{
-    routing::{get, post},
     http::StatusCode,
-    Json, Router,
+    Json,
+    Router, routing::{get, post},
 };
-use maud::{DOCTYPE, html};
+use maud::{DOCTYPE, html, Markup};
 use serde::{Deserialize, Serialize};
 
 #[tokio::main]
@@ -11,6 +11,7 @@ async fn main() {
     tracing_subscriber::fmt::init();
 
     let app = Router::new()
+        .route("/", get(index))
         .route("/heartbeat", get(heartbeat))
         .route("/users", post(create_user));
 
@@ -19,14 +20,22 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn heartbeat() -> String {
-    let markup = html! {
+async fn index() -> Markup {
+    html! {
+        (DOCTYPE)
+        html {
+            button { "punched out" }
+        }
+    }
+}
+
+async fn heartbeat() -> Markup {
+    html! {
         (DOCTYPE)
         html {
            "Hello, World!"
         }
-    };
-    markup.into_string()
+    }
 }
 
 async fn create_user(
