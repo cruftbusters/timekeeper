@@ -3,6 +3,7 @@ use axum::{
     http::StatusCode,
     Json, Router,
 };
+use maud::{DOCTYPE, html};
 use serde::{Deserialize, Serialize};
 
 #[tokio::main]
@@ -18,8 +19,14 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn root() -> &'static str {
-    "Hello, World!"
+async fn root() -> String {
+    let markup = html! {
+        (DOCTYPE)
+        html {
+           "Hello, World!"
+        }
+    };
+    markup.into_string()
 }
 
 async fn create_user(

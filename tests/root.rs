@@ -1,4 +1,5 @@
 use std::env;
+use maud::{DOCTYPE, html};
 
 #[tokio::test]
 async fn get_root() -> Result<(), reqwest::Error> {
@@ -9,7 +10,14 @@ async fn get_root() -> Result<(), reqwest::Error> {
         .text()
         .await?;
 
-    assert_eq!(body, "Hello, World!");
+    let expected_markup = html! {
+        (DOCTYPE)
+        html {
+           "Hello, World!"
+        }
+    };
+
+    assert_eq!(body, expected_markup.into_string());
 
     Ok(())
 }
