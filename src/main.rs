@@ -13,7 +13,7 @@ async fn main() {
         .route("/", get(root))
         .route("/users", post(create_user));
 
-    let address = "0.0.0.0:3000";
+    let address = "[::]:3000";
     let listener = tokio::net::TcpListener::bind(address).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
