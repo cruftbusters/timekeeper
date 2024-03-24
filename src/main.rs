@@ -11,7 +11,7 @@ async fn main() {
     tracing_subscriber::fmt::init();
 
     let app = Router::new()
-        .route("/", get(root))
+        .route("/heartbeat", get(heartbeat))
         .route("/users", post(create_user));
 
     let address = "[::]:3000";
@@ -19,7 +19,7 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn root() -> String {
+async fn heartbeat() -> String {
     let markup = html! {
         (DOCTYPE)
         html {
