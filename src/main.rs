@@ -12,6 +12,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/", get(index))
+        .route("/punch", post(punch))
         .route("/heartbeat", get(heartbeat))
         .route("/users", post(create_user));
 
@@ -24,9 +25,14 @@ async fn index() -> Markup {
     html! {
         (DOCTYPE)
         html {
-            button { "punched out" }
+            script src="https://unpkg.com/htmx.org@1.9.11" {}
+            button hx-post="/punch" hx-swap="innerHTML" { "punched out" }
         }
     }
+}
+
+async fn punch() -> Markup {
+    html! { "punched in" }
 }
 
 async fn heartbeat() -> Markup {
