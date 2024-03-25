@@ -31,12 +31,15 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn index() -> Markup {
+async fn index(
+    State(state): State<AppState>,
+) -> Markup {
+    let text = if *state.punched_in.lock().expect("mutex was poisoned") { "punched in" } else { "punched out" };
     html! {
         (DOCTYPE)
         html {
             script src="https://unpkg.com/htmx.org@1.9.11" {}
-            button hx-post="/punch" hx-swap="innerHTML" { "punched out" }
+            button hx-post="/punch" hx-swap="innerHTML" { (text) }
         }
     }
 }
