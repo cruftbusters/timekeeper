@@ -9,7 +9,7 @@ async fn punch_in_punch_out() -> Result<(), reqwest::Error> {
     let url = env::var("url").unwrap_or(default_url);
     let client = reqwest::Client::new();
 
-    let response = client.get(format!("{url}/")).send().await?;
+    let response = client.get(format!("{url}/punch")).send().await?;
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.text().await?;
@@ -24,7 +24,7 @@ async fn punch_in_punch_out() -> Result<(), reqwest::Error> {
     let expected_markup = html! { "punched in" };
     assert_eq!(body, expected_markup.into_string());
 
-    let response = client.get(format!("{url}/")).send().await?;
+    let response = client.get(format!("{url}/punch")).send().await?;
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.text().await?;
