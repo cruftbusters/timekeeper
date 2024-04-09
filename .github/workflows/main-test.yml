@@ -12,8 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: cargo build
       - run: |
+          cd api
+          cargo build
           cargo run &
           cargo test
           kill %1
