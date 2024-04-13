@@ -15,5 +15,6 @@ jobs:
       - uses: jetli/trunk-action@v0.5.0
       - run: |
           cd webapp
+          rustup target add wasm32-unknown-unknown
           trunk build --release
           aws s3 sync dist/ s3://timekeeper.cruftbusters.com/
