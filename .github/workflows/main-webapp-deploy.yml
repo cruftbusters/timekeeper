@@ -1,0 +1,22 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'webapp/Cargo.toml'
+      - 'webapp/index.html'
+      - 'webapp/src/**'
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cd webapp
+          trunk build --release
+          aws s3 sync dist/ s3://timekeeper.cruftbusters.com/
