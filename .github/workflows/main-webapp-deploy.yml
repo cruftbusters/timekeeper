@@ -1,20 +1,30 @@
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+    paths:
+      - webapp/src/**
+      - webapp/Cargo.lock
+      - webapp/Cargo.toml
 
-concurrency:
-  cancel-in-progress: true
-  group: ${{ github.workflow }}
+permissions:
+  contents: write
+  id-token: write
 
 jobs:
   main-webapp-deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::552879364626:role/gh_s3_write_timekeeper.cruftbusters.com
+          role-session-name: MySessionName
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: jetli/trunk-action@v0.5.0
       - run: |
-          cd webapp
+          github_tag=v$(git rev-list --count HEAD)
           rustup target add wasm32-unknown-unknown
-          trunk build --release
-          aws s3 sync dist/ s3://timekeeper.cruftbusters.com/
+          trunk build --release --config webapp/Cargo.toml
+          aws s3 sync webapp/dist/ s3://timekeeper.cruftbusters.com/
