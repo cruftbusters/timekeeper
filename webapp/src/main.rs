@@ -1,11 +1,24 @@
-use web_sys::window;
+use yew::prelude::*;
 
 fn main() {
-    let document = window()
-        .and_then(|win| win.document())
-        .expect("Could not access document");
-    let body = document.body().expect("Could not access document.body");
-    let text_node = document.create_text_node("Hello, world from Vanilla Rust!");
-    body.append_child(text_node.as_ref())
-        .expect("Failed to append text");
+    yew::Renderer::<App>::new().render();
+}
+
+#[function_component]
+fn App() -> Html {
+    let counter = use_state(|| 0);
+    let onclick = {
+        let counter = counter.clone();
+        move |_| {
+            let value = *counter + 1;
+            counter.set(value);
+        }
+    };
+
+    html! {
+        <div>
+            <button {onclick}>{ "+1" }</button>
+            <p>{ *counter }</p>
+        </div>
+    }
 }
