@@ -1,0 +1,31 @@
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  main-webapp-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: version
+        run: |
+          github_tag=v$(git rev-list --count HEAD)
+          echo github_tag=$github_tag >> $GITHUB_OUTPUT
+          echo artifact=webapp-dist-$github_tag.tar.gz >> $GITHUB_OUTPUT
+      - uses: jetli/trunk-action@v0.5.0
+      - run: |
+          rustup target add wasm32-unknown-unknown
+          trunk build --release --config webapp/Cargo.toml
+          tar czf ${{ steps.version.outputs.artifact }} -C webapp/dist .
+      - run: |
+          git tag -f ${{ steps.version.outputs.github_tag }}
+          git push origin ${{ steps.version.outputs.github_tag }}
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.version.outputs.artifact }}
+          tag_name: ${{ steps.version.outputs.github_tag }}
