@@ -1,0 +1,21 @@
+on:
+  pull_request:
+    paths:
+      - .github/workflows/api.*
+      - api/**
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cd api
+          cargo build
+          cargo run &
+          cargo test
+          kill %1
