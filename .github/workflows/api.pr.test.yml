@@ -14,8 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          cd api
-          cargo build
-          cargo run &
-          cargo test
+          package=timekeeper-api
+          cargo build --package $package
+          cargo run --package $package &
+          cargo test --package $package
           kill %1
