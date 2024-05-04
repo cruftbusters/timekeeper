@@ -4,17 +4,10 @@ Easy punch in punch out style timekeeping service. Groups punches by billing per
 
 ## todo
 
-### punching
+the time is 2023-01-01T00:00:00-0700
 
-* toggle punch button changes text upon toggle
-* punch status persists after client refresh
-* punch status persists after server restart
-* view punch pairs
-
-### invoice
-
-* create invoice for billing period
-* view punches intersecting invoice billing period
-* view hours punched in during invoice billing period
-* view un-invoiced punches
-* disallow overlapping billing period
+start | end
+(punch)|
+2023-01-01T00:00:00-0700|(punch)
+2023-01-01T00:00:00-0700|2023-01-01T04:00:00-0700
+(punch)|
