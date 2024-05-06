@@ -1,0 +1,8 @@
+.sheet {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+button {
+  grid-column: 1/3;
+}
